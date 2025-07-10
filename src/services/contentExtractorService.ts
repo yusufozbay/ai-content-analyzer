@@ -6,20 +6,14 @@ export interface ExtractedContent {
 
 export const extractContentFromUrl = async (url: string): Promise<ExtractedContent> => {
   try {
-    // Use CORS proxy to fetch the content
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-    
-    const response = await fetch(proxyUrl, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
+    const response = await fetch('/.netlify/functions/fetchContent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
     });
-
     if (!response.ok) {
-      throw new Error(`Failed to fetch content: ${response.status} ${response.statusText}`);
+      throw new Error('Failed to fetch content');
     }
-
     const htmlContent = await response.text();
     return parseHtmlToMarkdown(htmlContent, url);
   } catch (error) {
