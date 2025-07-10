@@ -1,6 +1,6 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-exports.handler = async (event) => {
+export async function handler(event) {
   const { url } = JSON.parse(event.body || '{}');
   if (!url) {
     return { statusCode: 400, body: 'Missing URL' };
@@ -12,4 +12,4 @@ exports.handler = async (event) => {
   } catch (err) {
     return { statusCode: 500, body: 'Fetch failed: ' + err.message };
   }
-};
+}
